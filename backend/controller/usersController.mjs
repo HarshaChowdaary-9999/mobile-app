@@ -73,17 +73,34 @@ const listCustomer = async (req, res) => {
 const customerStats = async (req, res) => {
   const customerID = req.params.customerID;
   const groupID = req.params.groupID;
+  let data = [];
   try {
-    const customerData = await userModel
-      .findOne({ _id: customerID })
-      .populate("groups");
     const groupData = await groupsModels
       .findOne({ _id: groupID })
-      .populate("monthly");
+      .populate({ path: "monthly", populate: { path: "paymentSheet" } });
 
-    console.log(groupData.monthly);
+    let temp = {};
+    groupData.monthly.map((month) => {
+      temp["month"] = month.month;
+      temp["monthAmount"] = month.amount;
+      temp["paidAmount"] = 0;
+      temp["paymentIds"] = [];
+      temp["monthID"] = month._id;
+      month.paymentSheet.map((paymentSheet) => {
+        if (paymentSheet.customerID.equals(customerID)) {
+          console.log(paymentSheet);
 
-    res.status(200).json({ success: true });
+          temp["paidAmount"] = temp["paidAmount"] + paymentSheet.amount;
+          temp["paymentIds"].push(paymentSheet._id);
+        }
+      });
+      data.push(temp);
+      temp = {};
+    });
+
+    console.log(data);
+
+    res.status(200).json({ success: true, data: data });
   } catch (error) {
     console.log("Error at fetching the customer stats", error);
     res.status(400).json({

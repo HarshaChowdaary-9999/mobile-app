@@ -81,12 +81,10 @@ const Group = ({selectedGroupID=[],customerID=''}) => {
           let groupsData = data['data']; 
           
           if (selectedGroupID.length>0){
-            console.log(selectedGroupID);
             const selectedGroupIDs = selectedGroupID.map(group => group.groupID);
 
             const finalData = groupsData.filter(item => selectedGroupIDs.includes(item._id));
 
-            console.log(finalData);
             setGroup(finalData)
             setManageGroupButton(false)
 
@@ -150,7 +148,7 @@ const Group = ({selectedGroupID=[],customerID=''}) => {
               )}
               {
                 groupDrop[group._id] && !manageGroupButton && (
-                    <ManageMonthlyView />
+                    <ManageMonthlyView customerID={customerID} groupID={group._id}/>
                 )
               }
             </View>
