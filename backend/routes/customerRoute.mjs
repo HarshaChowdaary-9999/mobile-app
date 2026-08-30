@@ -1,6 +1,7 @@
 import {
   addCustomer,
   customerStats,
+  customerStatsMonthly,
   listCustomer,
   searchCustomer,
 } from "../controller/usersController.mjs";
@@ -16,5 +17,7 @@ router.get("/searchCustomer/:customerName", searchCustomer);
 router.get("/listCustomer", listCustomer);
 
 router.get("/customerStats/:customerID/:groupID", customerStats);
+
+router.get("/customerStatsMonthly/:customerID/:monthID", customerStatsMonthly);
 
 export default router;

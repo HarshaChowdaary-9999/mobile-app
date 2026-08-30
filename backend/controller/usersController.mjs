@@ -1,6 +1,9 @@
 import { log } from "console";
 import userModel from "../models/customerModels.mjs";
 import groupsModels from "../models/groupsModels.mjs";
+import { monthlyReport } from "../models/groupsModels.mjs";
+import paymentModels from "../models/paymentModels.mjs";
+import { match } from "assert";
 //Add new customer
 
 const addCustomer = async (req, res) => {
@@ -86,21 +89,26 @@ const customerStats = async (req, res) => {
       temp["paidAmount"] = 0;
       temp["paymentIds"] = [];
       temp["monthID"] = month._id;
+      temp["paymentsHistory"] = [];
       month.paymentSheet.map((paymentSheet) => {
         if (paymentSheet.customerID.equals(customerID)) {
           console.log(paymentSheet);
 
           temp["paidAmount"] = temp["paidAmount"] + paymentSheet.amount;
           temp["paymentIds"].push(paymentSheet._id);
+          temp["paymentsHistory"].push(paymentSheet);
         }
       });
       data.push(temp);
       temp = {};
     });
 
-    console.log(data);
+    console.log("customer Stats", data[0].paymentsHistory);
 
-    res.status(200).json({ success: true, data: data });
+    res.status(200).json({
+      success: true,
+      data: data,
+    });
   } catch (error) {
     console.log("Error at fetching the customer stats", error);
     res.status(400).json({
@@ -110,4 +118,31 @@ const customerStats = async (req, res) => {
   }
 };
 
-export { addCustomer, searchCustomer, listCustomer, customerStats };
+const customerStatsMonthly = async (req, res) => {
+  try {
+    const customerID = req.params.customerID;
+    const monthID = req.params.monthID;
+    console.log(monthID, customerID);
+    const month = await monthlyReport
+      .findOne({ _id: monthID })
+      .populate("paymentSheet");
+
+    const filteredData = await month.paymentSheet.filter(
+      (data) => data.customerID.toString() === customerID.toString()
+    );
+
+    //console.log(filteredData);
+
+    res.status(200).json({ success: true, payments: filteredData });
+  } catch (error) {
+    console.log("Error at fetching the customer stats monthly", error);
+  }
+};
+
+export {
+  addCustomer,
+  searchCustomer,
+  listCustomer,
+  customerStats,
+  customerStatsMonthly,
+};

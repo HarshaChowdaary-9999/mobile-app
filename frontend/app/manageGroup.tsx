@@ -27,7 +27,7 @@ const manageGroup = () => {
   useEffect(()=>{
     const fetchData =async()=>{
       try{
-        const fetchgroupdata = await fetch(`http://10.0.2.2:4000/group/groupViewHelper/${id}`)
+        const fetchgroupdata = await fetch(`http://localhost:4000/group/groupViewHelper/${id}`)
         console.log(id);
         
         if (fetchgroupdata.ok){
@@ -53,7 +53,7 @@ const manageGroup = () => {
   },[])
   useEffect(()=>{
     const customerSearch = async()=>{
-      const customerList = await fetch("http://10.0.2.2:4000/customer/listCustomer")
+      const customerList = await fetch("http://localhost:4000/customer/listCustomer")
       if (customerList.ok){
         const data = await customerList.json()
         const data1= data['data']
@@ -70,7 +70,7 @@ const manageGroup = () => {
     try{
       console.log(monthName,monthAmount);
       
-      const sendingData = await fetch("http://10.0.2.2:4000/group/addMonth",{
+      const sendingData = await fetch("http://localhost:4000/group/addMonth",{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const manageGroup = () => {
     try{
       console.log("slected Name,id",selectedName,id);
       
-      const senddata=await fetch(`http://10.0.2.2:4000/group/addCustomerToGroup`,{
+      const senddata=await fetch(`http://localhost:4000/group/addCustomerToGroup`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json",

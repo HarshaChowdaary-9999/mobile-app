@@ -28,7 +28,7 @@ const GroupForm = () => {
       <Text style={styles.label}>Group Name</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter group name"
+        placeholder="Type group name"
         value={groupName}
         onChangeText={setGroupName}
       />

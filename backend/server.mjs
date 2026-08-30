@@ -30,7 +30,7 @@ app.use("/customer", customer);
 app.use("/payment", payments);
 
 mongoose.connect(database.url).then(() => {
-  app.listen(port, () => {
+  app.listen(port, '0.0.0.0' ,() => {
     console.log(`Connected to db & listening on ${port}`);
   });
 });
